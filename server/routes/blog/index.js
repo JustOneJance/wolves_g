@@ -9,8 +9,25 @@ router.route('/').get((req, res) => {
   return nextApp.render(req, res, '/Blog', req.query)
 });
 
+router.route('/posts/:id').get((req, res) => {
+  return nextApp.render(req, res, '/BlogPost', { id: req.params.id })
+});
+
+router.route('/posts').get((req, res) => {
+  Post.find({}, (err, posts) => {
+    res.json(posts);
+  })
+});
+
+router.route('/posts').post((req, res) => {
+  const id = req.body.id ? req.body.id : {};
+  Post.findById(id, (err, posts) => {
+    res.json(posts);
+  })
+});
+
 router.route('/new').post((req, res) => {
-  const { title, tag, text } = req.body;
+  const { title, tag, text} = req.body;
   const post = new Post({
     title,
     tag,
